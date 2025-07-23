@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/gen.dir/link.d CMakeFiles/gen.dir/generator/src/main.cpp.o CMakeFiles/gen.dir/generator/src/generator.cpp.o -o gen

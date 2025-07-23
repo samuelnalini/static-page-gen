@@ -1,0 +1,3 @@
+/home/samuel/Projects/static-page/build/CMakeFiles/gen.dir
+/home/samuel/Projects/static-page/build/CMakeFiles/edit_cache.dir
+/home/samuel/Projects/static-page/build/CMakeFiles/rebuild_cache.dir
