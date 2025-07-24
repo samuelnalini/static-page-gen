@@ -2,8 +2,9 @@
 
 <!--
 
-    @{user} = "test case";
-    @{test} = "muhammed";
+    @HTML Variable Example = "HTML Variable Example";
+    @Card Title = "Card Title";
+    @Card content = "Card content";
 
 -->
 
@@ -12,22 +13,36 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Statically Generated</title>
-
-        <!-- <link rel="shortcut icon" href="favicon.ico">
-            <link rel="stylesheet" href="your.css"> -->
+        <title>HTML Variable Example</title>
     </head>
 
     <body>
         <main>
-            
-            <section classname = "page">
-                <p>Hello, test case</p>
+            <section classname="banner">
+                <h1>A statically generated webpage</h1>
             </section>
 
+            <section classname="cards">
+                <ul>
+                    <li classname="card">
+                        <h2>Card Title</h2>
+                        <p>Card content</p>
+                    </li>
+                    <li classname="card">
+                    <!--
+                        @Blueberry Muffins = "Blueberry Muffins";
+                        @I like blueberries! = "I like blueberries!";
+                    -->
+                        <h2>Blueberry Muffins</h2>
+                        <p>I like blueberries!</p>
+                    </li>
+                </ul>
+            </section>
         </main>
 
-        test case
+        <footer>
+            
+        </footer>
     </body>
 
 </html>

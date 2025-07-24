@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <algorithm>
+#include <regex>
 
 void Generator::readFile(std::ifstream& file)
 {
@@ -36,19 +36,33 @@ void Generator::readFile(std::ifstream& file)
 
 void Generator::generateStaticPage()
 {
+    std::regex varPattern(R"(\{(\w+)\})");
+    std::string result;
+    auto searchStart{ source.cbegin() };
+    std::smatch match;
 
-    std::sort(readVariables.begin(), readVariables.end(), [](const VarToken& a, const VarToken& b) {
-            return a.startIdx > b.startIdx;
-            });
-
-    for (VarToken var : readVariables)
+    while (std::regex_search(searchStart, source.cend(), match, varPattern))
     {
-        std::string replStr{ declVariables[var.varName] };
-        source.replace(var.startIdx - 1, var.nameLen + 2, replStr);
+        result.append(searchStart, match.prefix().second);
+        
+        std::string varName = match[1].str();
+
+        auto it = declVariables.find(varName);
+        if (it != declVariables.end())
+        {
+            result.append(it->second);
+        } else
+        {
+            result.append(match[0].str());
+        }
+
+        searchStart = match.suffix().first;
     }
 
+    result.append(searchStart, source.cend());
+
     std::ofstream outputFile("static.html");
-    outputFile << source;
+    outputFile << result;
     std::cout << "Generated static.html\n";
 }
 
