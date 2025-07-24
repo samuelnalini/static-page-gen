@@ -1,9 +1,9 @@
 # HTML Static Page Generator
 *A simple static page generator that allows you to declare variables directly in your HTML page.*
 
-# INSTRUCTIONS:
+## INSTRUCTIONS:
 
-##GENERATING YOUR FILE:
+### GENERATING YOUR FILE:
 
 The executable is found in **static-page/build/gen**
 
@@ -19,7 +19,7 @@ EXAMPLE:
 This will generate **static.html** in the **same directory as the gen executable** (may change to allow specification later)
 
 
-## CREATING AND UTILIZING VARIABLES:
+### CREATING AND UTILIZING VARIABLES:
 
 Variables can be declared inside or outside of comments, I recommend the following to avoid issues:
 
@@ -41,7 +41,7 @@ will turn into
 
 *You can see an example inside of page/template.html*
 
-# SOME CONSIDERATIONS
+### SOME CONSIDERATIONS
 
 *This is one of my first C++ projects and is definitely not intended to be used in large projects. It was mostly just a learning experience for me.*
 
