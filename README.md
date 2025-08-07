@@ -3,6 +3,25 @@
 
 ## INSTRUCTIONS:
 
+### BUILDING:
+
+In order to build this project, you'll need to clone the directory:
+
+```
+git clone -j8 https://github.com/samuelnalini/static-page-gen.git
+```
+
+Then, go into the project folder and create a build directory
+```
+cd static-page-gen && mkdir build && cd build
+```
+
+Once you're in the build directory, run
+```
+make
+```
+
+
 ### GENERATING YOUR FILE:
 
 The executable is found in **static-page/build/gen**
@@ -44,5 +63,5 @@ will turn into
 ### SOME CONSIDERATIONS
 
 *This is one of my first C++ projects and is definitely not intended to be used in large projects. It was mostly just a learning experience for me.*
-
+*Furthermore, this was not built with security in mind, it is rather a learning project.*
 *This is only built for linux but can work on other OSes as well with minor tweaks, if not just a rebuild.*
