@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/samuel/Projects/static-page/build",
-  "command": "/usr/bin/c++   -std=gnu++23 -o CMakeFiles/gen.dir/generator/src/main.cpp.o -c /home/samuel/Projects/static-page/generator/src/main.cpp",
-  "file": "/home/samuel/Projects/static-page/generator/src/main.cpp",
-  "output": "CMakeFiles/gen.dir/generator/src/main.cpp.o"
-}
-]
