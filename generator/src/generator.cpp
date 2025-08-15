@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <regex>
+#include <iomanip>
 
 void Generator::readFile(std::ifstream& file)
 {
@@ -13,22 +14,27 @@ void Generator::readFile(std::ifstream& file)
 
     while (!isAtEOF())
     {
-        switch (peek())
+        switch (source[fileIdx])
         {
             case '@':
                 {
                     if (peek() == '{')
                     {
+                        advance(); // consume the @ 
+                        advance(); // consume the {
                         declareVar();
                     }
                     break;
                 }
             case '{':
                 {
+                    advance();
                     readVar();
                     break;
                 }
         }
+
+        advance();
     }
 
     generateStaticPage();
@@ -68,17 +74,21 @@ void Generator::generateStaticPage()
 
 void Generator::readVar()
 {
-    int startingIdx{ fileIdx };
-    while (peek() != '}')
+    int startingIdx{fileIdx};
+    std::string varName;
+    while (source[fileIdx] != '}')
     {
         if (isAtEOF())
         {
             std::cerr << "Invalid statement at " << lineNum << '\n';
             exit(1);
         }
+
+        varName += source[fileIdx];
+        advance();
     }
 
-    std::string varName{ source.substr(startingIdx, (fileIdx - startingIdx - 1)) };
+    advance(); // Consume the '}'
 
     auto mapKey{ declVariables.find(varName) };
     if (mapKey == declVariables.end())
@@ -87,84 +97,116 @@ void Generator::readVar()
         exit(1);
     }
 
-    VarToken var(lineNum, startingIdx, (fileIdx - startingIdx - 1),  varName);
+    VarToken var(lineNum, startingIdx, (fileIdx - startingIdx),  varName);
 
     readVariables.emplace_back(var);
-    //std::cout << "\nUSED VARIABLE: " << varName << "\n";
-    //std::cout << "EOF: " << (fileIdx == isAtEOF()) << "\nstartingIdx: " << startingIdx << "\nfileIdx: " << fileIdx << "\nlineNum: " << lineNum << "\nnameLen: " << (fileIdx - startingIdx - 1) << '\n';
-
 }
 
 void Generator::declareVar()
 {
-    int startingIdx{ fileIdx };
+    int startingIdx{ fileIdx + 1 }; // Starts at '{' so I need to increment it by 1
     int startingLine{ lineNum };
     std::string varName;
-    while (peek() != '}')
+
+    while (source[fileIdx] != '}') {
+        if (isAtEOF())
+        {
+            std::cerr << "Invalid declaration on line " << startingLine << '\n';
+            exit(1);
+        }
+        varName += source[fileIdx];
+        advance();
+    } 
+    advance(); // consumes the '}'
+               
+    //varName = source.substr(startingIdx, ((fileIdx) - startingIdx));
+    std::cout << "Declaring variable " << varName << ' ';
+
+    while (source[fileIdx] != '=')
     {
         if (isAtEOF())
         {
             std::cerr << "Invalid declaration on line " << startingLine << '\n';
             exit(1);
         }
+        advance();
     }
 
-    varName = source.substr(startingIdx, (fileIdx - startingIdx - 1));
+    advance(); // Consume the =
+    std::cout << "as ";
 
-    while (peek() != '=')
+
+    while (source[fileIdx] != '"') // Start quote
     {
         if (isAtEOF())
         {
             std::cerr << "Invalid declaration on line " << startingLine << '\n';
             exit(1);
         }
+        advance();
     }
 
+    advance(); // Consumes the quote
 
-    while (peek() != '"') // First quote
-    {
-        if (isAtEOF())
-        {
-            std::cerr << "Invalid declaration on line " << startingLine << '\n';
-            exit(1);
-        }
-    }
-
+    int quotes{1}; // Includes the starting quote
+    bool exempt{false};
     std::string varVal;
     startingIdx = fileIdx;
 
-     while (peek() != '"') // End quote
+    //std::cout << "Starting at " << source[startingIdx] << '\n';
+
+     while (source[fileIdx] != ';') // Declaration end
     {
         if (isAtEOF())
         {
-            std::cerr << "Invalid declaration on line " << startingLine << '\n';
+            std::cerr << "Unfinished declaration on line " << startingLine << '\n';
             exit(1);
         }
-    }   
+        
+        if (source[fileIdx] == '\\') {
+            exempt = true;
+            advance();
+        }
 
-    if (peek() != ';')
-    {
-        std::cerr << "Unfinished declaration on line " << startingLine << '\n';
-        exit(1);
+        if (source[fileIdx] == '"') {
+            if (!exempt) {
+                ++quotes;
+                //std::cout << " " << quotes << " ";
+            }
+            else {
+                exempt = false;
+                //std::cout << " exempt off ";
+            }
+        }
+
+        if (quotes < 2) {
+            std::cout << source[fileIdx];
+            varVal += source[fileIdx];
+        }
+        else if (quotes > 2) {
+            std::cerr << "Invalid declaration on line " << startingLine << ": " << "too many quotes -> " << quotes << '\n';
+            exit(1);
+        }
+
+        advance();
     }
 
-
-    varVal = source.substr(startingIdx, fileIdx - startingIdx - 2);
+    advance(); // Consume the ';'
+    std::cout << '\n';
     declVariables[varName] = varVal;
-
-    //std::cout << "DECLARED VARIABLE: " << varName << "\nValue: " << varVal << "\nlineNum: " << lineNum << "\nstartingIdx: " << startingIdx << "\nfileIdx: " << fileIdx << "\nnameLen: " << (fileIdx - startingIdx - 2) << '\n';
 }
 
 void Generator::advance()
 {
     fileIdx++;
+    if (source[fileIdx] == '\n') lineNum++;
 }
 
 char Generator::peek()
 {
-    char c {source[fileIdx]};
-    if (c == '\n') lineNum++;
-    advance();
+    if (source[fileIdx + 1] >= source.length()) return '\0';
+
+    char c {source[fileIdx + 1]}; 
     return c;
 }
 

@@ -33,8 +33,8 @@ private:
     void generateStaticPage();
 private:
     std::string source;
-    int lineNum = 1;
-    int fileIdx;
+    int lineNum{1};
+    int fileIdx{0};
     std::vector<VarToken> readVariables;
     std::unordered_map<std::string, std::string> declVariables;
 };
