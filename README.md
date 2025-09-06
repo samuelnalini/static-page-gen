@@ -65,3 +65,5 @@ will turn into
 *This is one of my first C++ projects and is definitely not intended to be used in large projects. It was mostly just a learning experience for me.*
 *Furthermore, this was not built with security in mind, it is rather a learning project.*
 *This is only built for linux but can work on other OSes as well with minor tweaks, if not just a rebuild.*
+
+I plan on moving this to https://github.com/samuelnalini/project-frame in the future
